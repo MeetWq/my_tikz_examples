@@ -1,0 +1,49 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, chains, graphs, angles, quotes, positioning, calc}
+\usetikzlibrary{decorations.pathreplacing}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    auto,
+    >=stealth,
+    node distance=5mm,
+    block/.style={draw, fill=blue!20, rectangle, minimum height=10mm, minimum width=10mm, inner sep=2mm},
+    sum/.style={draw, fill=blue!20, circle, inner sep=1mm},
+    dot/.style={fill=black, circle, inner sep=0.4mm}]
+    
+    \node (input) {};
+    \node [block, right=10mm of input] (F) {$F(s)$};
+    \node [sum, right=of F] (sum1) {};
+    \node [block, right=of sum1] (C2) {$C_2(s)$};
+    \node [sum, right=of C2] (sum2) {};
+    \node [block, right=of sum2] (C1) {$C_1(s)$};
+    \node [block, right=15mm of C1] (Ku) {$K_u$};
+    \node [sum, right=of Ku] (sum3) {};
+    \node [block, right=10mm of sum3] (P1) {$P_1(s)$};
+    \node [block, right=20mm of P1] (P2) {$P_2(s)$};
+    \node [right=10mm of P2] (output) {};
+    \node [below=of sum3] (Fc) {$F_c(s)$};
+    \node [block, above=of P1] (inner) {$m_r L_r s^2 P_2(s)$};
+
+    \draw [->] (input) -- node[above]{$\alpha_{ref}$} (F);
+    \draw [->] (F) -- node[below, near end]{$+$} (sum1);
+    \draw [->] (sum1) -- (C2);
+    \draw [->] (C2) -- node[below, near end]{$+$} (sum2);
+    \draw [->] (sum2) -- (C1);
+    \draw [->] (C1) -- node[above]{$V_m(s)$} (Ku);
+    \draw [->] (Ku) -- node[below, near end]{$+$} (sum3);
+    \draw [->] (sum3) -- (P1);
+    \draw [->] (P1) -- node[above, pos=0.3]{$\theta(s)$} (P2);
+    \node [dot] at ($ (P1) + (18mm, 0) $) (theta) {};
+    \draw [->] (P2) -- node[above]{$\alpha(s)$} (output);
+    \node [dot] at ($ (P2) + (12mm, 0) $) (alpha) {};
+    \draw [->] (Fc) -- node[right]{$+$} (sum3);
+    \draw [->] (theta) -- +(0, -15mm) -| node[right, very near end]{$-$} (sum2);
+    \draw [->] (alpha) -- +(0, -20mm) -| node[right, very near end]{$-$} (sum1);
+    \draw [->] (theta) |- (inner);
+    \draw [->] (inner) -| node[right, very near end]{$+$} (sum3);
+\end{tikzpicture}
+
+\end{document}
