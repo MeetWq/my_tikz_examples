@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+    auto,
+    >=stealth,
+    node distance=7mm,
+    block/.style={draw, fill=blue!20, rectangle, minimum height=10mm, minimum width=6mm, inner sep=1mm},
+    triangle/.style={draw, fill=blue!20, isosceles triangle, inner sep=0.5mm},
+    sum/.style={draw, fill=blue!20, circle, inner sep=1mm},
+    dot/.style={fill=black, circle, inner sep=0.4mm}]
+    
+    \node (input) {};
+    \node [sum, right=12mm of input] (sum1) {};
+    \node [triangle, right=of sum1] (KI) {$K_I$};
+    \node [triangle, above=of KI] (KP) {$K_P$};
+    \node [triangle, below=of KI] (KD) {$K_D$};
+    \node [block, right=of KI] (integral) {$\displaystyle{\frac{1}{s}}$};
+    \node [block, right=of KD] (diff) {$\displaystyle{\frac{s}{\tau_D s + 1}}$};
+    \node [sum, right=15mm of integral] (sum2) {};
+    \node [sum, right=of sum2] (sum3) {};
+    \node [above=of sum3] (di) {};
+    \node [block, right=of sum3] (plant) {$P(s)$};
+    \node [right=12mm of plant] (output) {};
+
+    \draw [->] (input) -- node[above]{$\alpha_{ref}(s)$} node[below, near end]{$+$} (sum1);
+    \draw [->] (sum1) -- node[coordinate, midway, name=mid]{} (KI);
+    \draw [->] (mid) |- (KP);
+    \draw [->] (mid) |- (KD);
+    \draw [->] (KI) -- (integral);
+    \draw [->] (KD) -- (diff);
+    \draw [->] (KP) -| node[left, very near end]{$+$} (sum2);
+    \draw [->] (integral) -- node[above, near end]{$+$} (sum2);
+    \draw [->] (diff) -| node[left, very near end]{$+$} (sum2);
+    \draw [->] (sum2) -- node[above, pos=0.6]{$+$} (sum3);
+    \draw [->] (di) --  node[above, pos=0.1]{$d_i(s)$} node[left, pos=0.5]{$+$} (sum3);
+    \draw [->] (sum3) -- (plant);
+    \draw [->] (plant) -- node[above, name=out]{$\alpha(s)$} (output);
+    \draw [->] (out) -- ++(0, -25mm) -| node[left, very near end]{$-$} (sum1);
+\end{tikzpicture}
